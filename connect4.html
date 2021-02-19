@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GMS(Connect 4)</title>
+	<style>
+	  body{
+	    background-color: rgb(242, 242, 242);
+		margin-left:20%;
+		margin-right:20%;
+	  }
+	  table{
+	      background-color: rgb(102, 179, 255);
+	  }
+	  table,tr,td{
+		border: 1px solid black;
+	  }
+	  td{
+		width:85px;
+		height:85px;
+		border-radius: 50%;
+	  }
+	  
+	  /*#ff3333 //red*/
+	  /*#262626 //black*/
+		/*red = rgb(255, 51, 51)
+		  black = rgb(38, 38, 38)	  
+		*/
+	</style>
+</head>
+<body>
+
+	<p>Can i play this game with you?</p>
+
+	<p>Choose Color here</p>
+	<select id="init_color" style="width:100px;">
+	  <option value="">Color</option>
+	  <option value="rgb(255, 51, 51)">Red</option>
+	  <option value="rgb(38, 38, 38)">Black<option>
+	</select>
+	
+	<table id="board">
+	<thead>
+	</thead>
+	<tbody>
+	</tbody>
+	</table>
+
+	<!--
+	<label style="background-color:#262626">Black</label>
+	<label style="background-color:#ff3333">Red</label>
+	-->
+<script>
+	var rowLen = 6;
+	var colLen = 7;
+	var selectedColor = null;
+	var start = false;
+	var new_color = selectedColor;
+	var lastPosition = [];
+	lastPosition[0] = lastPosition[1] = lastPosition[2] = 
+	lastPosition[3] = lastPosition[4] = lastPosition[5] = 
+	lastPosition[6] = rowLen;
+
+		document.getElementById("init_color").onchange = function(){
+		   //alert(this.options[this.selectedIndex].value);
+		   //alert("You Choose "+this.options[this.selectedIndex].innerHTML);
+		  selectedColor = this.options[this.selectedIndex].value;
+		}
+		
+		function clickCell(c){
+		  if(selectedColor != null) { //check if user select initial color
+
+			if(c.getAttribute("style")) { //ensure that cell has no color
+			    alert("Cannot click cell which contains a color");
+			    return;
+			}
+
+			if(start == false){
+				start = true;
+				moveToLast(selectedColor, c);
+				//console.log(lastPosition);
+				new_color = selectedColor;				
+			}else{
+				switch(new_color){
+				    case "rgb(255, 51, 51)":	
+                        moveToLast("rgb(38, 38, 38)", c);			
+					    new_color = "rgb(38, 38, 38)";
+					break;	
+					case "rgb(38, 38, 38)":				
+                        moveToLast("rgb(255, 51, 51)", c);						
+						 new_color = "rgb(255, 51, 51)"; 
+					break;
+				}
+			}
+		  }else{
+		     alert("Plase select Color");
+		  }	
+            
+		}
+        
+		function moveToLast(color,cell){
+			lastPosition[cell.id.split(",")[1]] = lastPosition[cell.id.split(",")[1]] - 1;
+			document.getElementById((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]))
+			.style.backgroundColor = color;	
+            HorizontalChecker((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));				
+            VerticalChecker((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));			
+		    DiagonalRight((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));
+			DiagonalLeft((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));
+		}
+		
+		function createBoard(){ //setup the game board
+		    for(var r =0; r<rowLen;r++){
+			    var row = document.getElementById("board").getElementsByTagName("tbody")[0].insertRow(r);
+			    for(var c =0;c<colLen;c++){
+					row.insertCell(c);
+					row.cells[c].setAttribute("id",r+","+c);
+					row.cells[c].setAttribute("onclick", "clickCell(this)");
+				}	
+		    }
+		}
+		
+		function HorizontalChecker(cell){ //horizontal
+		    var index = 0;
+			var counter=0;
+
+			while(index < rowLen){
+	
+				if(document.getElementById(cell.split(",")[0]+","+index).style.backgroundColor == 
+			       document.getElementById(cell).style.backgroundColor){
+				   counter++;
+				   //console.log(counter);
+				}else{
+				    counter = 0;
+				}
+				
+				if(counter == 4){
+				    alert(document.getElementById(cell).style.backgroundColor+"WINS: HORIZONTAL");
+					counter = 0;
+                    break;					
+				}
+				index++;
+			}
+        }    
+		
+		function VerticalChecker(cell){ //vertical CHECKER
+		    var index = 0;
+			var counter=0;
+			//console.log(cell);
+			//console.log("para");
+			//console.log((cell.split(",")[0]+","+index));
+			//console.log(document.getElementById(cell).style==null);
+			
+			//alert(typeof(document.getElementById((mycell.split(",")[1]+","+index))));
+			while(index < colLen-1){
+			    //console.log((index+","+cell.split(",")[1]));
+				if(document.getElementById((index+","+cell.split(",")[1])).style.backgroundColor == 
+			       document.getElementById(cell).style.backgroundColor){
+				   counter++;
+				   //console.log(counter);
+				   }else{
+				    counter = 0;
+				   }
+				if(counter == 4){
+				    alert(document.getElementById(cell).style.backgroundColor+"WINS: VERTICAL");
+					counter = 0;
+                    break;					
+				}
+				index++;
+			}			
+		}
+		
+		function DiagonalRight(cell){
+		    var row = cell.split(",")[0], 
+			    col = cell.split(",")[1];				
+			var Rightcounter=0;
+			var Cellindex = [];
+			var up = 0;
+			
+			while(up<2){
+				while(document.getElementById(row+","+col)!=null){
+					if(Cellindex.indexOf(document.getElementById(row+","+col).id) == -1){
+					    Cellindex.push(document.getElementById(row+","+col).id);
+					}
+
+                    switch(up){
+					    case 0:
+					       col--;
+					       row--;
+                        break;
+                        case 1:
+					       col++;
+					       row++;	
+                        break;						   
+					}
+				}
+                row = cell.split(",")[0], 
+			    col = cell.split(",")[1]				
+			  up++;
+			}
+            
+			for(var i=0;i<Cellindex.length;i++){
+				if(document.getElementById(Cellindex[i]).style.backgroundColor == 
+			       document.getElementById(cell).style.backgroundColor){
+				   Rightcounter++;
+				}else{
+				    Rightcounter = 0;
+				}
+				
+				if(Rightcounter == 4){
+				    alert(document.getElementById(cell).style.backgroundColor+"WINS: LEFT DIAGONAL");
+					Rightcounter = 0;
+                    break;					
+				}
+			}
+		
+		}
+		
+		function DiagonalLeft(cell){
+		    var row = cell.split(",")[0],
+			    col = cell.split(",")[1];
+			var Leftcounter=0;
+			var Cellindex = [];
+			var up = 0;
+			
+			while(up<2){				
+                while(document.getElementById(row+","+col)!=null){
+					if(Cellindex.indexOf(document.getElementById(row+","+col).id) == -1){
+					    Cellindex.push(document.getElementById(row+","+col).id);
+					}
+					
+                    switch(up){
+					    case 0:
+					       col++;
+					       row--;
+                        break;
+                        case 1:
+					       col--;
+					       row++;	
+                        break;						   
+					}
+				}
+                row = cell.split(",")[0], 
+			    col = cell.split(",")[1]				
+				up++;
+			}	
+			
+			for(var i=0;i<Cellindex.length;i++){
+				if(document.getElementById(Cellindex[i]).style.backgroundColor == 
+			       document.getElementById(cell).style.backgroundColor){
+				   Leftcounter++;  
+				   console.log(Leftcounter);
+				}else{
+				    Leftcounter = 0;
+				}
+
+				if(Leftcounter == 4){
+				    alert(document.getElementById(cell).style.backgroundColor+"WINS: LEFT DIAGONAL");
+					Leftcounter = 0;
+                    break;					
+				}
+			}
+			
+		}
+
+//red = rgb(255, 51, 51)
+//black = rgb(38, 38, 38)
+	createBoard();	
+</script>
+</body>
+</html>
