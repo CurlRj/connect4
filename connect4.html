@@ -11,15 +11,37 @@
 	  table{
 	      background-color: rgb(102, 179, 255);
 	  }
-	  table,tr,td{
+	  table,tr{
 		border: 1px solid black;
 	  }
+	  
 	  td{
-		width:80px;
-		height:80px;
+	    border: 3px solid black;
+	  }
+	  
+	  td{
+		width:70px;
+		height:70px;
 		border-radius: 50%;
 	  }
 	  
+      #init_color{
+	     background-color: rgb(128, 191, 255);
+	     width:20%;
+		 height:26px;
+	  }
+	  
+	  .red{
+	     background-color:rgb(255, 51, 51);
+		 color: rgb(102, 179, 255);
+	  }
+
+	  .black{
+	     background-color:rgb(38, 38, 38);
+		 color: rgb(102, 179, 255);
+	  }
+	  
+		
 	  /*#ff3333 //red*/
 	  /*#262626 //black*/
 		/*red = rgb(255, 51, 51)
@@ -29,22 +51,28 @@
 </head>
 <body>
 
-	<p><b>Connect4</b></p>
+	<h3><b>Connect4</b></h3>
 	<p><b>Written By: Roleo Manalaysay Jr.</b></p>
-
-	<p><b>Choose Initial Color Here:</b></p>
-	<select id="init_color" style="width:100px;">
-	  <option value="">Color</option>
-	  <option value="rgb(255, 51, 51)">Red</option>
-	  <option value="rgb(38, 38, 38)">Black<option>
-	</select>
+	<p><b>HR Interviwer: Alysa Marie Domingo.</b></p>		
 	
-	<table id="board">
-	<thead>
-	</thead>
-	<tbody>
-	</tbody>
-	</table>
+	<div>
+	<label><b>Choose Color Here:</b></label>
+	<select id="init_color">
+	  <option value="">Color</option>
+	  <option value="rgb(255, 51, 51)" class="red">Red</option>
+	  <option value="rgb(38, 38, 38)" class="black">Black</option>
+	</select>
+	</div><br>
+	<div>
+	   <table id="board">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+	   </table>
+	</div>
+    <br>
+    <label><b>Written In: Javascript</b></label>	
 
 	<!--
 	<label style="background-color:#262626">Black</label>
@@ -62,9 +90,8 @@
 	lastPosition[6] = rowLen;
 
 		document.getElementById("init_color").onchange = function(){
-		   //alert(this.options[this.selectedIndex].value);
-		   //alert("You Choose "+this.options[this.selectedIndex].innerHTML);
 		  selectedColor = this.options[this.selectedIndex].value;
+		  this.disabled =true;
 		}
 		
 		function clickCell(c){
@@ -101,11 +128,11 @@
 		function moveToLast(color,cell){
 			lastPosition[cell.id.split(",")[1]] = lastPosition[cell.id.split(",")[1]] - 1;
 			document.getElementById((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]))
-			.style.backgroundColor = color;	
-            HorizontalChecker((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));				
-            VerticalChecker((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));			
+			.style.backgroundColor = color;				
 		    DiagonalRight((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));
 			DiagonalLeft((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));
+            HorizontalChecker((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));				
+            VerticalChecker((lastPosition[cell.id.split(",")[1]]+","+cell.id.split(",")[1]));			
 		}
 		
 		function createBoard(){ //setup the game board
@@ -115,6 +142,7 @@
 					row.insertCell(c);
 					row.cells[c].setAttribute("id",r+","+c);
 					row.cells[c].setAttribute("onclick", "clickCell(this)");
+					//row.cells[c].innerHTML =("id",r+","+c);
 				}	
 		    }
 		}
@@ -134,7 +162,7 @@
 				}
 				
 				if(counter == 4){
-				    alert(document.getElementById(cell).style.backgroundColor+"WINS: HORIZONTAL");
+				    message(document.getElementById(cell).style.backgroundColor);
 					counter = 0;
                     break;					
 				}
@@ -156,12 +184,11 @@
 				if(document.getElementById((index+","+cell.split(",")[1])).style.backgroundColor == 
 			       document.getElementById(cell).style.backgroundColor){
 				   counter++;
-				   //console.log(counter);
 				   }else{
 				    counter = 0;
 				   }
 				if(counter == 4){
-				    alert(document.getElementById(cell).style.backgroundColor+"WINS: VERTICAL");
+				    message(document.getElementById(cell).style.backgroundColor);
 					counter = 0;
                     break;					
 				}
@@ -177,9 +204,9 @@
 			var up = 0;
 			
 			while(up<2){
-				while(document.getElementById(row+","+col)!=null){
-					if(Cellindex.indexOf(document.getElementById(row+","+col).id) == -1){
-					    Cellindex.push(document.getElementById(row+","+col).id);
+				while(document.getElementById((row+","+col))!=null){
+					if(Cellindex.indexOf(document.getElementById((row+","+col)).id) == -1){
+					    Cellindex.push(document.getElementById((row+","+col)).id);
 					}
 
                     switch(up){
@@ -207,7 +234,7 @@
 				}
 				
 				if(Rightcounter == 4){
-				    alert(document.getElementById(cell).style.backgroundColor+"WINS: LEFT DIAGONAL");
+				    message(document.getElementById(cell).style.backgroundColor);
 					Rightcounter = 0;
                     break;					
 				}
@@ -223,11 +250,11 @@
 			var up = 0;
 			
 			while(up<2){				
-                while(document.getElementById(row+","+col)!=null){
-					if(Cellindex.indexOf(document.getElementById(row+","+col).id) == -1){
-					    Cellindex.push(document.getElementById(row+","+col).id);
+                while(document.getElementById((row+","+col))!=null){
+					if(Cellindex.indexOf(document.getElementById((row+","+col)).id) == -1){
+					    Cellindex.push(document.getElementById((row+","+col)).id);
 					}
-					
+					//console.log(document.getElementById(row+","+col).id);
                     switch(up){
 					    case 0:
 					       col++;
@@ -248,18 +275,27 @@
 				if(document.getElementById(Cellindex[i]).style.backgroundColor == 
 			       document.getElementById(cell).style.backgroundColor){
 				   Leftcounter++;  
-				   console.log(Leftcounter);
+				   //console.log(Leftcounter);
 				}else{
-				    Leftcounter = 0;
+				    //Leftcounter = 0;
 				}
 
 				if(Leftcounter == 4){
-				    alert(document.getElementById(cell).style.backgroundColor+"WINS: LEFT DIAGONAL");
+				    message(document.getElementById(cell).style.backgroundColor);
 					Leftcounter = 0;
                     break;					
 				}
 			}
 			
+		}
+		
+		function message(m){
+		   if(m == "rgb(255, 51, 51)"){
+		      alert("Red Wins");
+		   }else{
+		      alert("Black Wins");
+		   }
+            location.reload();		   
 		}
 
 //red = rgb(255, 51, 51)
