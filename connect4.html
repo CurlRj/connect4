@@ -53,7 +53,7 @@
 
 	<h3><b>Connect4</b></h3>
 	<p><b>Written By: Roleo Manalaysay Jr.</b></p>
-	<p><b>HR Interviwer: Alysa Marie Domingo.</b></p>		
+	<p><b>HR Interviewer: Alysa Marie Domingo.</b></p>		
 	
 	<div>
 	<label><b>Choose Color Here:</b></label>
@@ -142,31 +142,32 @@
 					row.insertCell(c);
 					row.cells[c].setAttribute("id",r+","+c);
 					row.cells[c].setAttribute("onclick", "clickCell(this)");
-					//row.cells[c].innerHTML =("id",r+","+c);
+					row.cells[c].innerHTML =("id",r+","+c);
 				}	
 		    }
 		}
 		
 		function HorizontalChecker(cell){ //horizontal
-		    var index = 0;
-			var counter=0;
+		    var Hindex = 0;
+			var Hcounter=0;
 
-			while(index < rowLen){
+			while(Hindex <= rowLen){
 	
-				if(document.getElementById(cell.split(",")[0]+","+index).style.backgroundColor == 
+				if(document.getElementById(cell.split(",")[0]+","+Hindex).style.backgroundColor == 
 			       document.getElementById(cell).style.backgroundColor){
-				   counter++;
-				   //console.log(counter);
+				   Hcounter++;
+				   console.log("Counter Check"+Hcounter);
+				   console.log(cell.split(",")[0]+","+Hindex);
 				}else{
-				    counter = 0;
+				    Hcounter = 0;
 				}
 				
-				if(counter == 4){
+				if(Hcounter == 4){
 				    message(document.getElementById(cell).style.backgroundColor);
-					counter = 0;
+					Hcounter = 0;
                     break;					
 				}
-				index++;
+				Hindex++;
 			}
         }    
 		
@@ -184,6 +185,8 @@
 				if(document.getElementById((index+","+cell.split(",")[1])).style.backgroundColor == 
 			       document.getElementById(cell).style.backgroundColor){
 				   counter++;
+				   //console.log("Vertical Counter Check"+counter);
+				   //console.log((index+","+cell.split(",")[1]));				   
 				   }else{
 				    counter = 0;
 				   }
@@ -196,7 +199,7 @@
 			}			
 		}
 		
-		function DiagonalRight(cell){
+		function DiagonalRight(cell){// "\"
 		    var row = cell.split(",")[0], 
 			    col = cell.split(",")[1];				
 			var Rightcounter=0;
@@ -229,8 +232,6 @@
 				if(document.getElementById(Cellindex[i]).style.backgroundColor == 
 			       document.getElementById(cell).style.backgroundColor){
 				   Rightcounter++;
-				}else{
-				    Rightcounter = 0;
 				}
 				
 				if(Rightcounter == 4){
@@ -242,10 +243,10 @@
 		
 		}
 		
-		function DiagonalLeft(cell){
+		function DiagonalLeft(cell){  "/"
 		    var row = cell.split(",")[0],
 			    col = cell.split(",")[1];
-			var Leftcounter=0;
+			var Lcounter=0;
 			var Cellindex = [];
 			var up = 0;
 			
@@ -253,8 +254,9 @@
                 while(document.getElementById((row+","+col))!=null){
 					if(Cellindex.indexOf(document.getElementById((row+","+col)).id) == -1){
 					    Cellindex.push(document.getElementById((row+","+col)).id);
+						console.log("MATCH "+(row+","+col));
 					}
-					//console.log(document.getElementById(row+","+col).id);
+					
                     switch(up){
 					    case 0:
 					       col++;
@@ -270,17 +272,14 @@
 			    col = cell.split(",")[1]				
 				up++;
 			}	
-			
+			console.log(Cellindex);
 			for(var i=0;i<Cellindex.length;i++){
 				if(document.getElementById(Cellindex[i]).style.backgroundColor == 
 			       document.getElementById(cell).style.backgroundColor){
-				   Leftcounter++;  
-				   //console.log(Leftcounter);
-				}else{
-				    //Leftcounter = 0;
+				   Lcounter++;  
+				   console.log(Lcounter);
 				}
-
-				if(Leftcounter == 4){
+				if(Lcounter == 4){
 				    message(document.getElementById(cell).style.backgroundColor);
 					Leftcounter = 0;
                     break;					
